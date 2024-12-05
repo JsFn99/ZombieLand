@@ -30,15 +30,15 @@ function setup() {
 }
 
 function draw() {
-    background(0);
-    image(bgImage, 0, 0, width, height);
+  background(0);
+  image(bgImage, 0, 0, width, height);
 
   obstacles.forEach((obstacle) => obstacle.show());
 
   hero.update(mouseX, mouseY, obstacles);
   hero.show();
 
-  let leader = hero.pos; 
+  let leader = hero.pos;
   if (snakeMode) {
     men.forEach((man, index) => {
       leader = index === 0 ? hero.pos : men[index - 1].pos;
@@ -59,20 +59,18 @@ function draw() {
 }
 
 function mousePressed() {
-
-    obstacles.push(new Obstacle(mouseX, mouseY, random(20, 80), "green"));
+  obstacles.push(new Obstacle(mouseX, mouseY, random(20, 80), "green"));
 }
 
 function keyPressed() {
-    console.log(key); 
-    if (key === 'm') {
-      men.push(new Man(random(width), random(height)));
-    }
-    if (key === 's') {
-      snakeMode = !snakeMode;
-    }
-    if (key === 'z') {
-      zombies.push(new Zombie(random(width), random(height)));
-    }
+  console.log(key);
+  if (key === 'm') {
+    men.push(new Man(random(width), random(height)));
   }
-  
+  if (key === 's') {
+    snakeMode = !snakeMode;
+  }
+  if (key === 'z') {
+    zombies.push(new Zombie(random(width), random(height)));
+  }
+}

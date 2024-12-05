@@ -11,4 +11,5 @@ class Obstacle {
     noStroke();
     ellipse(this.pos.x, this.pos.y, this.radius * 2); */
   }
+  
 }
