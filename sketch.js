@@ -2,15 +2,18 @@ let hero;
 let men = [];
 let zombies = [];
 let obstacles = [];
+let bullets = [];
 let snakeMode = false;
 let bgImage;
 let zombieImage;
 let manImage;
 let heroImage;
 let rockImage;
+let bulletImage;
 let sliderVitesseMaxZombies;
 let sliderVitesseMaxMen;
 let sliderVitesseMaxHero;
+let zombieCountP;
 
 function preload() {
   bgImage = loadImage('assets/desert.png');
@@ -18,6 +21,7 @@ function preload() {
   manImage = loadImage('assets/man.png');
   heroImage = loadImage('assets/hero.png');
   rockImage = loadImage('assets/rock.png');
+  bulletImage = loadImage('assets/bullet.png');
 }
 
 function setup() {
@@ -35,6 +39,11 @@ function setup() {
   createMonSlider("Vitesse Zombies", 1, 10, 3, 0.1, 20, 0, "white", "maxSpeed", zombies);
   createMonSlider("Vitesse Men", 1, 10, 5, 0.1, 20, 40, "white", "maxSpeed", men);
   createMonSlider("Vitesse Hero", 1, 10, 5, 0.1, 20, 80, "white", "maxSpeed", [hero]);
+
+  // Création de l'élément HTML pour afficher le nombre de zombies
+  zombieCountP = createP(`Nombre de zombies: ${zombies.length}`);
+  zombieCountP.style('color', 'white');
+  zombieCountP.position(20, 120);
 }
 
 function draw() {
@@ -60,10 +69,25 @@ function draw() {
     });
   }
 
-  zombies.forEach((zombie) => {
+  zombies.forEach((zombie, zIndex) => {
     zombie.update(obstacles);
     zombie.show();
+
+    bullets.forEach((bullet, bIndex) => {
+      bullet.applyBehaviors(zombie.pos);
+      bullet.update();
+      bullet.show();
+
+      // Vérifiez la collision entre la balle et le zombie
+      if (p5.Vector.dist(bullet.pos, zombie.pos) < bullet.r + zombie.size / 2) {
+        // Supprimez le zombie et la balle
+        zombies.splice(zIndex, 1);
+        bullets.splice(bIndex, 1);
+      }
+    });
   });
+  // Mise à jour du nombre de zombies
+  zombieCountP.html(`Nombre de zombies : ${zombies.length}`);
 }
 
 function keyPressed() {
@@ -79,6 +103,9 @@ function keyPressed() {
   }
   if (key === 'o') {
     obstacles.push(new Obstacle(mouseX, mouseY, random(20, 80), "green"));
+  }
+  if (key === 'b') {
+    bullets.push(new Bullet(hero.pos.x, hero.pos.y));
   }
 }
 
