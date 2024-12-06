@@ -32,6 +32,7 @@ function setup() {
 
   hero = new Hero(mouseX, mouseY);
 
+  // Création des zombies et des hommes
   for (let i = 0; i < 10; i++) {
     zombies.push(new Zombie(random(width), random(height)));
   }
@@ -39,7 +40,7 @@ function setup() {
   for (let i = 0; i < 5; i++) {
     men.push(new Man(random(width), random(height)));
   }
-
+  
   obstacles.push(new Obstacle(width / 2, height / 2, 100, "green"));
 
   // Création des sliders
@@ -47,12 +48,12 @@ function setup() {
   createMonSlider("Vitesse Men", 1, 10, 5, 0.1, 20, 40, "white", "maxSpeed", men);
   createMonSlider("Vitesse Hero", 1, 10, 5, 0.1, 20, 80, "white", "maxSpeed", [hero]);
 
-  // Création de l'élément HTML pour afficher le nombre de zombies
+  // affiche le nombre de zombies
   zombieCountP = createP(`Nombre de zombies: ${zombies.length}`);
   zombieCountP.style('color', 'white');
   zombieCountP.position(20, 120);
 
-  // Création de l'élément HTML pour afficher le nombre de men
+  // affiche le nombre d'hommes
   menCountP = createP(`Nombre d\'hommes: ${men.length}`);
   menCountP.style('color', 'white');
   menCountP.position(20, 150);
@@ -61,12 +62,14 @@ function setup() {
 function draw() {
   background(backgroundImage);
   image(bgImage, 0, 0, width, height);
-
+  // affiche les obstacles
   obstacles.forEach((obstacle) => obstacle.show());
 
+  // Mise à jour et affichage du héros
   hero.update(mouseX, mouseY, obstacles);
   hero.show();
 
+  // Mise à jour et affichage des hommes
   let leader = hero.pos;
   if (snakeMode) {
     men.forEach((man, index) => {
@@ -81,7 +84,7 @@ function draw() {
     });
   }
 
-  // Mise à jour et affichage des balles
+  // Mise à jour et affichage des missiles
   bullets.forEach((bullet, bIndex) => {
     if (zombies.length > 0) {
       bullet.applyBehaviors(zombies[0].pos); // Cible le premier zombie
@@ -114,23 +117,26 @@ function draw() {
 
 function keyPressed() {
   console.log(key);
+  // Ajout d'un homme
   if (key === 'm') {
     men.push(new Man(random(width), random(height)));
   }
+  // Men en mode serpent activé/désactivé
   if (key === 's') {
     snakeMode = !snakeMode;
   }
+  // Ajout d'un zombie 
   if (key === 'z') {
     zombies.push(new Zombie(random(width), random(height)));
   }
+  // Ajout d'un obstacle à la position de la souris
   if (key === 'o') {
     obstacles.push(new Obstacle(mouseX, mouseY, random(20, 80), "green"));
   }
+  // tir de missiles limité au nombre de zombies sur la map
   if (key === 'b' ) {
     if(zombies.length > 0 && bullets.length < zombies.length)
       bullets.push(new Bullet(hero.pos.x, hero.pos.y));
-    // compter et afficher log nombre de balles
-    console.log("Nombre de balles : " + bullets.length);
   }
 }
 
