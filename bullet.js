@@ -53,3 +53,8 @@ class Bullet {
       }
     }
   }
+
+  // l'appelation bullet est en effet bizarre puisque
+  // j'ai fini par prendre un missile pour le sprite
+  // puisque le bullet a plus un comportement de missile
+  // que de balle
