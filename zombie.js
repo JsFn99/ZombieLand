@@ -1,7 +1,7 @@
 class Zombie extends Character {
   constructor(x, y) {
     super(x, y);
-    this.size = 60;
+    this.size = 70;
     this.color = "red";
     this.maxSpeed = 3;
     this.maxForce = 0.2;

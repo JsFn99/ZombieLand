@@ -5,7 +5,7 @@ class Bullet {
       this.acc = createVector(0, 0);
       this.maxSpeed = 10;
       this.maxForce = 0.25;
-      this.r = 8; // Rayon de la balle
+      this.r = 16; // Rayon de la balle
     }
   
     applyBehaviors(target) {

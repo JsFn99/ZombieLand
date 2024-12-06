@@ -10,6 +10,7 @@ let manImage;
 let heroImage;
 let rockImage;
 let bulletImage;
+let backgroundImage;
 let sliderVitesseMaxZombies;
 let sliderVitesseMaxMen;
 let sliderVitesseMaxHero;
@@ -22,6 +23,7 @@ function preload() {
   heroImage = loadImage('assets/hero.png');
   rockImage = loadImage('assets/rock.png');
   bulletImage = loadImage('assets/bullet.png');
+  backgroundImage = loadImage('assets/background.png');
 }
 
 function setup() {
@@ -29,8 +31,12 @@ function setup() {
 
   hero = new Hero(mouseX, mouseY);
 
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 10; i++) {
     zombies.push(new Zombie(random(width), random(height)));
+  }
+
+  for (let i = 0; i < 5; i++) {
+    men.push(new Man(random(width), random(height)));
   }
 
   obstacles.push(new Obstacle(width / 2, height / 2, 100, "green"));
@@ -47,7 +53,7 @@ function setup() {
 }
 
 function draw() {
-  background(0);
+  background(backgroundImage);
   image(bgImage, 0, 0, width, height);
 
   obstacles.forEach((obstacle) => obstacle.show());
@@ -69,16 +75,16 @@ function draw() {
     });
   }
 
-  zombies.forEach((zombie, zIndex) => {
-    zombie.update(obstacles);
-    zombie.show();
+  // Mise à jour et affichage des balles
+  bullets.forEach((bullet, bIndex) => {
+    if (zombies.length > 0) {
+      bullet.applyBehaviors(zombies[0].pos); // Cible le premier zombie
+    }
+    bullet.update();
+    bullet.show();
 
-    bullets.forEach((bullet, bIndex) => {
-      bullet.applyBehaviors(zombie.pos);
-      bullet.update();
-      bullet.show();
-
-      // Vérifiez la collision entre la balle et le zombie
+    // Vérifiez la collision entre la balle et les zombies
+    zombies.forEach((zombie, zIndex) => {
       if (p5.Vector.dist(bullet.pos, zombie.pos) < bullet.r + zombie.size / 2) {
         // Supprimez le zombie et la balle
         zombies.splice(zIndex, 1);
@@ -86,6 +92,13 @@ function draw() {
       }
     });
   });
+
+  // Mise à jour et affichage des zombies
+  zombies.forEach((zombie) => {
+    zombie.update(obstacles);
+    zombie.show();
+  });
+
   // Mise à jour du nombre de zombies
   zombieCountP.html(`Nombre de zombies : ${zombies.length}`);
 }
@@ -106,6 +119,8 @@ function keyPressed() {
   }
   if (key === 'b') {
     bullets.push(new Bullet(hero.pos.x, hero.pos.y));
+    // compter et afficher log nombre de balles
+    console.log("Nombre de balles : " + bullets.length);
   }
 }
 

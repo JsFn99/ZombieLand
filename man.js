@@ -1,7 +1,7 @@
 class Man extends Character {
   constructor(x, y) {
     super(x, y);
-    this.size = 60;
+    this.size = 40;
     this.color = "yellow";
     this.maxSpeed = 5;
     this.maxForce = 0.2;
