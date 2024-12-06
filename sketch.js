@@ -66,7 +66,8 @@ function draw() {
   obstacles.forEach((obstacle) => obstacle.show());
 
   // Mise à jour et affichage du héros
-  hero.update(mouseX, mouseY, obstacles);
+  hero.applyBehaviors(mouseX, mouseY, obstacles, men);
+  hero.update();
   hero.show();
 
   // Mise à jour et affichage des hommes
@@ -74,12 +75,14 @@ function draw() {
   if (snakeMode) {
     men.forEach((man, index) => {
       leader = index === 0 ? hero.pos : men[index - 1].pos;
-      man.update(leader, obstacles, men);
+      man.applyBehaviors(leader, obstacles, men);
+      man.update();
       man.show();
     });
   } else {
     men.forEach((man) => {
-      man.update(hero.pos, obstacles, men);
+      man.applyBehaviors(hero.pos, obstacles, men);
+      man.update();
       man.show();
     });
   }
@@ -104,7 +107,8 @@ function draw() {
 
   // Mise à jour et affichage des zombies
   zombies.forEach((zombie) => {
-    zombie.update(obstacles);
+    zombie.applyBehaviors(obstacles);
+    zombie.update();
     zombie.show();
   });
 
@@ -138,6 +142,12 @@ function keyPressed() {
     if(zombies.length > 0 && bullets.length < zombies.length)
       bullets.push(new Bullet(hero.pos.x, hero.pos.y));
   }
+  if(key === 'd') {
+    Character.debug = !Character.debug;
+    Obstacle.debug = !Obstacle.debug;
+    Bullet.debug = !Bullet.debug;
+    }
+
 }
 
 function createMonSlider(label, min, max, val, step, x, y, color, prop, targetArray) {
