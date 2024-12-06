@@ -37,6 +37,7 @@ class Man extends Character {
 
     show() {
         image(manImage, this.pos.x - this.size/2, this.pos.y - this.size/2, this.size, this.size);
+        // this.drawPath();
       /* fill(this.color);
       noStroke();
       ellipse(this.pos.x, this.pos.y, this.size); */

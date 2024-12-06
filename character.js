@@ -372,49 +372,6 @@
     show() {
       // dessin du chemin
       this.drawPath();
-      // dessin du vehicule
-      this.drawVehicle();
-    }
-  
-    drawVehicle() {
-      // formes fil de fer en blanc
-      stroke(255);
-      // épaisseur du trait = 2
-      strokeWeight(2);
-  
-      // formes pleines
-      fill(this.color);
-  
-      // sauvegarde du contexte graphique (couleur pleine, fil de fer, épaisseur du trait, 
-      // position et rotation du repère de référence)
-      push();
-      // on déplace le repère de référence.
-      translate(this.pos.x, this.pos.y);
-      // et on le tourne. heading() renvoie l'angle du vecteur vitesse (c'est l'angle du véhicule)
-      rotate(this.vel.heading());
-  
-      // Dessin d'un véhicule sous la forme d'un triangle. Comme s'il était droit, avec le 0, 0 en haut à gauche
-      triangle(-this.r_pourDessin, -this.r_pourDessin / 2, -this.r_pourDessin, this.r_pourDessin / 2, this.r_pourDessin, 0);
-      // Que fait cette ligne ?
-      //this.edges();
-  
-      // cercle pour le debug
-      if (Character.debug) {
-        stroke(255);
-        noFill();
-        circle(0, 0, this.r);
-      }
-  
-      // draw velocity vector
-      pop();
-      this.drawVector(this.pos, this.vel, color(255, 0, 0));
-  
-      // Cercle pour évitement entre vehicules et obstacles
-      if (Character.debug) {
-        stroke(255);
-        noFill();
-        circle(this.pos.x, this.pos.y, this.r);
-      }
     }
   
     drawPath() {
@@ -427,12 +384,12 @@
       // dessin du chemin
       this.path.forEach((p, index) => {
         if (!(index % 5)) {
-  
           circle(p.x, p.y, 1);
         }
       });
       pop();
     }
+
     drawVector(pos, v, color) {
       push();
       // Dessin du vecteur vitesse
