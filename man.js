@@ -9,16 +9,48 @@ class Man extends Character {
     this.vel.setMag(random(2, 4));
     this.acc = createVector();
     this.rayonZoneDeFreinage = 100;
+    this.distanceSeparation = this.size * 2; // Distance de séparation
   }
 
-  update(leader, obstacles) {
+  update(leader, obstacles, men) {
     let arriveForce = this.arrive(leader, this.size);
     let avoidForce = this.avoid(obstacles);
+    let separateForce = this.separate(men);
 
     this.applyForce(arriveForce);
     this.applyForce(avoidForce);
+    this.applyForce(separateForce);
 
     super.update();
+  }
+
+  separate(men) {
+    let desiredSeparation = this.distanceSeparation;
+    let steer = createVector(0, 0);
+    let count = 0;
+
+    men.forEach((other) => {
+      let d = p5.Vector.dist(this.pos, other.pos);
+      if ((d > 0) && (d < desiredSeparation)) {
+        let diff = p5.Vector.sub(this.pos, other.pos);
+        diff.normalize();
+        diff.div(d);
+        steer.add(diff);
+        count++;
+      }
+    });
+
+    if (count > 0) {
+      steer.div(count);
+    }
+
+    if (steer.mag() > 0) {
+      steer.setMag(this.maxSpeed);
+      steer.sub(this.vel);
+      steer.limit(this.maxForce);
+    }
+
+    return steer;
   }
 
   arrive(target, d = 0) {

@@ -65,12 +65,12 @@ function draw() {
   if (snakeMode) {
     men.forEach((man, index) => {
       leader = index === 0 ? hero.pos : men[index - 1].pos;
-      man.update(leader, obstacles);
+      man.update(leader, obstacles, men);
       man.show();
     });
   } else {
     men.forEach((man) => {
-      man.update(hero.pos, obstacles);
+      man.update(hero.pos, obstacles, men);
       man.show();
     });
   }
@@ -151,4 +151,3 @@ function createMonSlider(label, min, max, val, step, x, y, color, prop, targetAr
     });
   });
 }
-
