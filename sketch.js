@@ -117,8 +117,9 @@ function keyPressed() {
   if (key === 'o') {
     obstacles.push(new Obstacle(mouseX, mouseY, random(20, 80), "green"));
   }
-  if (key === 'b') {
-    bullets.push(new Bullet(hero.pos.x, hero.pos.y));
+  if (key === 'b' ) {
+    if(zombies.length > 0 && bullets.length < zombies.length)
+      bullets.push(new Bullet(hero.pos.x, hero.pos.y));
     // compter et afficher log nombre de balles
     console.log("Nombre de balles : " + bullets.length);
   }

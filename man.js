@@ -4,11 +4,11 @@ class Man extends Character {
     this.size = 40;
     this.color = "yellow";
     this.maxSpeed = 5;
-    this.maxForce = 0.2;
+    this.maxForce = 0.4;
     this.vel = p5.Vector.random2D();
     this.vel.setMag(random(2, 4));
     this.acc = createVector();
-    this.rayonZoneDeFreinage = 100;
+    this.rayonZoneDeFreinage = 180;
     this.distanceSeparation = this.size * 2; // Distance de séparation
   }
 
