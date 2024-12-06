@@ -4,6 +4,7 @@ class Hero extends Character {
     this.size = 100;
     this.color = "blue";
     this.maxSpeed = 5;
+    this.maxForce = 0.2;
   }
 
   update(mouseX, mouseY, obstacles) {
