@@ -15,6 +15,7 @@ let sliderVitesseMaxZombies;
 let sliderVitesseMaxMen;
 let sliderVitesseMaxHero;
 let zombieCountP;
+let menCountP;
 
 function preload() {
   bgImage = loadImage('assets/desert.png');
@@ -50,6 +51,11 @@ function setup() {
   zombieCountP = createP(`Nombre de zombies: ${zombies.length}`);
   zombieCountP.style('color', 'white');
   zombieCountP.position(20, 120);
+
+  // Création de l'élément HTML pour afficher le nombre de men
+  menCountP = createP(`Nombre d\'hommes: ${men.length}`);
+  menCountP.style('color', 'white');
+  menCountP.position(20, 150);
 }
 
 function draw() {
@@ -101,6 +107,9 @@ function draw() {
 
   // Mise à jour du nombre de zombies
   zombieCountP.html(`Nombre de zombies : ${zombies.length}`);
+
+  // Mise à jour du nombre d'hommes
+  menCountP.html(`Nombre d\'hommes : ${men.length}`);
 }
 
 function keyPressed() {
