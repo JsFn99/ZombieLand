@@ -3,7 +3,7 @@ let men = [];
 let zombies = [];
 let obstacles = [];
 let bullets = [];
-let snakeMode = false;
+let snakeMode = true;
 let bgImage;
 let zombieImage;
 let manImage;
@@ -11,11 +11,15 @@ let heroImage;
 let rockImage;
 let bulletImage;
 let backgroundImage;
+let lifeImage;
+let deathImage;
 let sliderVitesseMaxZombies;
 let sliderVitesseMaxMen;
 let sliderVitesseMaxHero;
 let zombieCountP;
 let menCountP;
+let lives = 3;
+let Score = 1000;
 
 function preload() {
   bgImage = loadImage('assets/desert.png');
@@ -25,6 +29,8 @@ function preload() {
   rockImage = loadImage('assets/rock.png');
   bulletImage = loadImage('assets/bullet.png');
   backgroundImage = loadImage('assets/background.png');
+  lifeImage = loadImage('assets/life.png');
+  deathImage = loadImage('assets/death.png');
 }
 
 function setup() {
@@ -40,7 +46,7 @@ function setup() {
   for (let i = 0; i < 5; i++) {
     men.push(new Man(random(width), random(height)));
   }
-  
+
   obstacles.push(new Obstacle(width / 2, height / 2, 100, "green"));
 
   // Création des sliders
@@ -57,6 +63,11 @@ function setup() {
   menCountP = createP(`Nombre d\'hommes: ${men.length}`);
   menCountP.style('color', 'white');
   menCountP.position(20, 150);
+
+  /// affiche le score
+  scoreP = createP(`Score: ${Score}`);
+  scoreP.style('color', 'white');
+  scoreP.position(20, 180);
 }
 
 function draw() {
@@ -66,7 +77,8 @@ function draw() {
   obstacles.forEach((obstacle) => obstacle.show());
 
   // Mise à jour et affichage du héros
-  hero.update(mouseX, mouseY, obstacles);
+  hero.applyBehaviors(mouseX, mouseY, obstacles, men);
+  hero.update();
   hero.show();
 
   // Mise à jour et affichage des hommes
@@ -74,15 +86,48 @@ function draw() {
   if (snakeMode) {
     men.forEach((man, index) => {
       leader = index === 0 ? hero.pos : men[index - 1].pos;
-      man.update(leader, obstacles, men);
+      man.applyBehaviors(leader, obstacles, men);
+      man.update();
       man.show();
     });
   } else {
     men.forEach((man) => {
-      man.update(hero.pos, obstacles, men);
+      man.applyBehaviors(hero.pos, obstacles, men);
+      man.update();
       man.show();
     });
   }
+
+  // Vérifiez les collisions entre les hommes et les zombies
+  for (let i = men.length - 1; i >= 0; i--) {
+    if (men[i].checkCollision(zombies)) {
+      men.splice(i, 1); // Supprimez l'homme touché
+      Score -= 100;
+      // Ajouter zombie 
+      zombies.push(new Zombie(random(width), random(height)));
+    }
+  }
+
+  // Vérifiez les collisions entre les zombies et le hero
+  // Vérifiez les collisions entre les zombies et le hero
+if (hero.checkCollision(zombies)) {
+  Score -= 200;
+  // supprimez tout les zombies
+  zombies = [];
+  // recréer des zombies
+  for (let i = 0; i < 10; i++) {
+    zombies.push(new Zombie(random(width), random(height)));
+  }
+  // perdre vie
+  lives--;
+  if (lives === 0) {
+    noLoop();
+    textSize(32);
+    textAlign(CENTER, CENTER);
+    text("Game Over", width / 2, height / 2);
+  }
+}
+
 
   // Mise à jour et affichage des missiles
   bullets.forEach((bullet, bIndex) => {
@@ -98,13 +143,15 @@ function draw() {
         // Supprimez le zombie et la balle
         zombies.splice(zIndex, 1);
         bullets.splice(bIndex, 1);
+        Score += 100;
       }
     });
   });
 
   // Mise à jour et affichage des zombies
   zombies.forEach((zombie) => {
-    zombie.update(obstacles);
+    zombie.applyBehaviors(obstacles);
+    zombie.update();
     zombie.show();
   });
 
@@ -113,6 +160,14 @@ function draw() {
 
   // Mise à jour du nombre d'hommes
   menCountP.html(`Nombre d\'hommes : ${men.length}`);
+
+  // Affiche les vies
+  for (let i = 0; i < lives; i++) {
+    image(lifeImage, width - (i + 1) * 40, 20, 30, 30);
+  }
+
+  // Mise à jour du score
+  scoreP.html(`Score : ${Score}`);
 }
 
 function keyPressed() {
@@ -134,10 +189,16 @@ function keyPressed() {
     obstacles.push(new Obstacle(mouseX, mouseY, random(20, 80), "green"));
   }
   // tir de missiles limité au nombre de zombies sur la map
-  if (key === 'b' ) {
-    if(zombies.length > 0 && bullets.length < zombies.length)
+  if (key === 'b') {
+    if (zombies.length > 0 && bullets.length < zombies.length)
       bullets.push(new Bullet(hero.pos.x, hero.pos.y));
   }
+  if (key === 'd') {
+    Character.debug = !Character.debug;
+    Obstacle.debug = !Obstacle.debug;
+    Bullet.debug = !Bullet.debug;
+  }
+
 }
 
 function createMonSlider(label, min, max, val, step, x, y, color, prop, targetArray) {
