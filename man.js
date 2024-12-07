@@ -34,6 +34,16 @@ class Man extends Character {
     super.update();
   }
 
+  checkCollision(zombies) {
+    for (let i = 0; i < zombies.length; i++) {
+      let d = p5.Vector.dist(this.pos, zombies[i].pos);
+      if (d < this.size / 2 + zombies[i].size / 2) {
+        return true;
+      }
+    }
+    return false;
+  }
+
 
     show() {
         image(manImage, this.pos.x - this.size/2, this.pos.y - this.size/2, this.size, this.size);
