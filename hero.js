@@ -12,15 +12,18 @@ class Hero extends Character {
 
   
   applyBehaviors(mouseX, mouseY, obstacles, men) {
+    // On calcule les forces
     let mousePos = createVector(mouseX, mouseY);
     let arriveForce = this.arrive(mousePos, 0);
     let avoidForce = this.avoid(obstacles,false);
     let separateForce = this.separate(men);
 
+    // On multiplie les forces par leur poids respectif
     arriveForce.mult(this.arriveWeight);
     avoidForce.mult(this.avoidWeight);
     separateForce.mult(this.separateWeight);
 
+    // On additionne les forces
     this.applyForce(arriveForce);
     this.applyForce(avoidForce);
     this.applyForce(separateForce);
@@ -29,6 +32,7 @@ class Hero extends Character {
   }
 
   checkCollision(zombies) {
+    // On vérifie si le héros entre en collision avec les zombies
     for (let i = 0; i < zombies.length; i++) {
       let d = p5.Vector.dist(this.pos, zombies[i].pos);
       if (d < this.size / 2 + zombies[i].size / 2) {
