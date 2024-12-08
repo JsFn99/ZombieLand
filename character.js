@@ -43,7 +43,7 @@
     }
   
     avoid(obstacles, considereVehiculesCommeObstacles = false) {
-      // On calcule un point devant le véhicule courant
+      // On calcule un point devant le character courant
       // on l'appelle ahead
       let ahead = this.vel.copy();
       ahead.mult(this.distanceAhead);
@@ -56,7 +56,7 @@
         this.drawVector(this.pos, ahead, "yellow");
         this.drawVector(this.pos, ahead2, "lightblue");
       }
-      // Pour le dessiner, il faut lui ajouter la position du véhicule
+      // Pour le dessiner, il faut lui ajouter la position du character
       ahead.add(this.pos);
       ahead2.add(this.pos);
   

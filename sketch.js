@@ -1,5 +1,5 @@
 let hero;
-let men = [];
+let dogs = [];
 let zombies = [];
 let obstacles = [];
 let bullets = [];
@@ -12,25 +12,27 @@ let rockImage;
 let bulletImage;
 let backgroundImage;
 let lifeImage;
-let deathImage;
+let StartBgImage;
 let sliderVitesseMaxZombies;
-let sliderVitesseMaxMen;
+let sliderVitesseMaxDogd;
 let sliderVitesseMaxHero;
 let zombieCountP;
-let menCountP;
+let dogsCountP;
 let lives = 3;
 let Score = 1000;
+let gameStarted = false;
 
 function preload() {
-  bgImage = loadImage('assets/desert.png');
-  zombieImage = loadImage('assets/zombie.png');
-  manImage = loadImage('assets/man.png');
-  heroImage = loadImage('assets/hero.png');
-  rockImage = loadImage('assets/rock.png');
-  bulletImage = loadImage('assets/bullet.png');
-  backgroundImage = loadImage('assets/background.png');
-  lifeImage = loadImage('assets/life.png');
-  deathImage = loadImage('assets/death.png');
+  bgImage = loadImage('assets/image/desert.png');
+  zombieImage = loadImage('assets/image/zombie.png');
+  dogImage = loadImage('assets/image/dog.png');
+  heroImage = loadImage('assets/image/hero.png');
+  rockImage = loadImage('assets/image/rock.png');
+  bulletImage = loadImage('assets/image/bullet.png');
+  backgroundImage = loadImage('assets/image/background.png');
+  lifeImage = loadImage('assets/image/life.png');
+  deathImage = loadImage('assets/image/death.png');
+  StartBgImage = loadImage('assets/image/StartBG.png');
 }
 
 function setup() {
@@ -38,20 +40,20 @@ function setup() {
 
   hero = new Hero(mouseX, mouseY);
 
-  // Création des zombies et des hommes
+  // Création des zombies et des chiens
   for (let i = 0; i < 10; i++) {
     zombies.push(new Zombie(random(width), random(height)));
   }
 
   for (let i = 0; i < 5; i++) {
-    men.push(new Man(random(width), random(height)));
+    dogs.push(new Dog(random(width), random(height)));
   }
 
   obstacles.push(new Obstacle(width / 2, height / 2, 100, "green"));
 
   // Création des sliders
   createMonSlider("Vitesse Zombies", 1, 10, 3, 0.1, 20, 0, "white", "maxSpeed", zombies);
-  createMonSlider("Vitesse Men", 1, 10, 5, 0.1, 20, 40, "white", "maxSpeed", men);
+  createMonSlider("Vitesse Dogs", 1, 10, 5, 0.1, 20, 40, "white", "maxSpeed", dogs);
   createMonSlider("Vitesse Hero", 1, 10, 5, 0.1, 20, 80, "white", "maxSpeed", [hero]);
 
   // affiche le nombre de zombies
@@ -59,10 +61,10 @@ function setup() {
   zombieCountP.style('color', 'white');
   zombieCountP.position(20, 120);
 
-  // affiche le nombre d'hommes
-  menCountP = createP(`Nombre d\'hommes: ${men.length}`);
-  menCountP.style('color', 'white');
-  menCountP.position(20, 150);
+  // affiche le nombre de chiens
+  dogsCountP = createP(`Nombre de chiens: ${dogs.length}`);
+  dogsCountP.style('color', 'white');
+  dogsCountP.position(20, 150);
 
   /// affiche le score
   scoreP = createP(`Score: ${Score}`);
@@ -71,112 +73,152 @@ function setup() {
 }
 
 function draw() {
-  background(backgroundImage);
-  image(bgImage, 0, 0, width, height);
-  // affiche les obstacles
-  obstacles.forEach((obstacle) => obstacle.show());
-
-  // Mise à jour et affichage du héros
-  hero.applyBehaviors(mouseX, mouseY, obstacles, men);
-  hero.update();
-  hero.show();
-
-  // Mise à jour et affichage des hommes
-  let leader = hero.pos;
-  if (snakeMode) {
-    men.forEach((man, index) => {
-      leader = index === 0 ? hero.pos : men[index - 1].pos;
-      man.applyBehaviors(leader, obstacles, men);
-      man.update();
-      man.show();
-    });
-  } else {
-    men.forEach((man) => {
-      man.applyBehaviors(hero.pos, obstacles, men);
-      man.update();
-      man.show();
-    });
+  if (!gameStarted) {
+    showStartMenu();
   }
+  else {
+    background(backgroundImage);
+    image(bgImage, 0, 0, width, height);
+    // affiche les obstacles
+    obstacles.forEach((obstacle) => obstacle.show());
 
-  // Vérifiez les collisions entre les hommes et les zombies
-  for (let i = men.length - 1; i >= 0; i--) {
-    if (men[i].checkCollision(zombies)) {
-      men.splice(i, 1); // Supprimez l'homme touché
-      Score -= 100;
-      // Ajouter zombie 
-      zombies.push(new Zombie(random(width), random(height)));
+    // Mise à jour et affichage du héros
+    hero.applyBehaviors(mouseX, mouseY, obstacles, dogs);
+    hero.update();
+    hero.show();
+
+    // Mise à jour et affichage des chiens
+    let leader = hero.pos;
+    if (snakeMode) {
+      dogs.forEach((dog, index) => {
+        leader = index === 0 ? hero.pos : dogs[index - 1].pos;
+        dog.applyBehaviors(leader, obstacles, dogs);
+        dog.update();
+        dog.show();
+      });
+    } else {
+      dogs.forEach((dog) => {
+        dog.applyBehaviors(hero.pos, obstacles, dogs);
+        dog.update();
+        dog.show();
+      });
     }
-  }
 
-  // Vérifiez les collisions entre les zombies et le hero
-  // Vérifiez les collisions entre les zombies et le hero
-if (hero.checkCollision(zombies)) {
-  Score -= 200;
-  // supprimez tout les zombies
-  zombies = [];
-  // recréer des zombies
-  for (let i = 0; i < 10; i++) {
-    zombies.push(new Zombie(random(width), random(height)));
-  }
-  // perdre vie
-  lives--;
-  if (lives === 0) {
-    noLoop();
-    textSize(32);
-    textAlign(CENTER, CENTER);
-    text("Game Over", width / 2, height / 2);
+    // Vérifiez les collisions entre les chiens et les zombies
+    for (let i = dogs.length - 1; i >= 0; i--) {
+      if (dogs[i].checkCollision(zombies)) {
+        new Audio('assets/audio/bark.m4a').play();
+        dogs.splice(i, 1); // Supprimez le chien touché
+        Score -= 100;
+        // Ajouter zombie 
+        zombies.push(new Zombie(random(width), random(height)));
+      }
+    }
+
+    // Vérifiez les collisions entre les zombies et le hero
+    if (hero.checkCollision(zombies)) {
+      new Audio('assets/audio/dead.m4a').play();
+      bloodyEffect();
+      Score -= 200;
+      // supprimez tout les zombies
+      zombies = [];
+      // recréer des zombies
+      for (let i = 0; i < 10; i++) {
+        zombies.push(new Zombie(random(width), random(height)));
+      }
+      // perdre vie
+      lives--;
+      if (lives === 0) {
+        GameOver();
+      }
+    }
+
+    // Mise à jour et affichage des missiles
+    bullets.forEach((bullet, bIndex) => {
+      if (zombies.length > 0) {
+        bullet.applyBehaviors(zombies[0].pos); // Cible le premier zombie
+      }
+      bullet.update();
+      bullet.show();
+
+      // Vérifiez la collision entre la balle et les zombies
+      zombies.forEach((zombie, zIndex) => {
+        if (p5.Vector.dist(bullet.pos, zombie.pos) < bullet.r + zombie.size / 2) {
+          // Supprimez le zombie et la balle
+          zombies.splice(zIndex, 1);
+          bullets.splice(bIndex, 1);
+          Score += 100;
+        }
+      });
+    });
+
+    // Mise à jour et affichage des zombies
+    zombies.forEach((zombie) => {
+      zombie.applyBehaviors(obstacles);
+      zombie.update();
+      zombie.show();
+    });
+
+    // Mise à jour du nombre de zombies
+    zombieCountP.html(`Nombre de zombies : ${zombies.length}`);
+
+    // Mise à jour du nombre de chiens
+    dogsCountP.html(`Nombre de chiens : ${dogs.length}`);
+
+    // Affiche les vies
+    for (let i = 0; i < lives; i++) {
+      image(lifeImage, width - (i + 1) * 40, 20, 30, 30);
+    }
+
+    // Mise à jour du score
+    scoreP.html(`Score : ${Score}`);
   }
 }
 
+function showStartMenu() {
+  background(StartBgImage);
+  textSize(64);
+  textAlign(CENTER, CENTER);
+  fill(255, 0, 0); // Couleur rouge pour le titre
+  text("Zombie Game", width / 2, height / 2 - 100);
+  
+  textSize(32);
+  fill(255); // Couleur blanche pour le reste du texte
+  text("Click To start a new game", width / 2, height / 2);
+}
 
-  // Mise à jour et affichage des missiles
-  bullets.forEach((bullet, bIndex) => {
-    if (zombies.length > 0) {
-      bullet.applyBehaviors(zombies[0].pos); // Cible le premier zombie
-    }
-    bullet.update();
-    bullet.show();
+function GameOver() {
+  noLoop();
+  background(0, 0, 0, 200); 
+  textSize(64);
+  textAlign(CENTER, CENTER);
+  fill(255, 0, 0); // Couleur rouge pour "Game Over"
+  text("Game Over", width / 2, height / 2 - 50);
+  
+  textSize(32);
+  fill(255); // Couleur blanche pour le reste du texte
+  text("You are such a Loser", width / 2, height / 2);
+  
+  textSize(16);
+  text(`Your score is : ${Score}`, width / 2, height / 2 + 50);
+  gameStarted = false;
+}
 
-    // Vérifiez la collision entre la balle et les zombies
-    zombies.forEach((zombie, zIndex) => {
-      if (p5.Vector.dist(bullet.pos, zombie.pos) < bullet.r + zombie.size / 2) {
-        // Supprimez le zombie et la balle
-        zombies.splice(zIndex, 1);
-        bullets.splice(bIndex, 1);
-        Score += 100;
-      }
-    });
-  });
-
-  // Mise à jour et affichage des zombies
-  zombies.forEach((zombie) => {
-    zombie.applyBehaviors(obstacles);
-    zombie.update();
-    zombie.show();
-  });
-
-  // Mise à jour du nombre de zombies
-  zombieCountP.html(`Nombre de zombies : ${zombies.length}`);
-
-  // Mise à jour du nombre d'hommes
-  menCountP.html(`Nombre d\'hommes : ${men.length}`);
-
-  // Affiche les vies
-  for (let i = 0; i < lives; i++) {
-    image(lifeImage, width - (i + 1) * 40, 20, 30, 30);
-  }
-
-  // Mise à jour du score
-  scoreP.html(`Score : ${Score}`);
+function bloodyEffect() {
+  push();
+  noStroke();
+  fill(255, 0, 0, 150); // Couleur rouge avec transparence
+  rect(0, 0, width, height);
+  pop();
 }
 
 function keyPressed() {
   console.log(key);
-  // Ajout d'un homme
+  // Ajout d'un chien
   if (key === 'm') {
-    men.push(new Man(random(width), random(height)));
+    dogs.push(new Dog(random(width), random(height)));
   }
-  // Men en mode serpent activé/désactivé
+  // Dogs en mode serpent activé/désactivé
   if (key === 's') {
     snakeMode = !snakeMode;
   }
@@ -190,15 +232,23 @@ function keyPressed() {
   }
   // tir de missiles limité au nombre de zombies sur la map
   if (key === 'b') {
-    if (zombies.length > 0 && bullets.length < zombies.length)
+    if (zombies.length > 0 && bullets.length < zombies.length) {
+      // effet de tir assets/rocket.mp3
       bullets.push(new Bullet(hero.pos.x, hero.pos.y));
+      new Audio('assets/audio/rocket.m4a').play();
+    }
   }
   if (key === 'd') {
     Character.debug = !Character.debug;
     Obstacle.debug = !Obstacle.debug;
     Bullet.debug = !Bullet.debug;
   }
+}
 
+function mousePressed() {
+  if (!gameStarted) {
+    gameStarted = true;
+  }
 }
 
 function createMonSlider(label, min, max, val, step, x, y, color, prop, targetArray) {
