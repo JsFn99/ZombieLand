@@ -12,7 +12,7 @@ let rockImage;
 let bulletImage;
 let backgroundImage;
 let lifeImage;
-let deathImage;
+let StartBgImage;
 let sliderVitesseMaxZombies;
 let sliderVitesseMaxDogd;
 let sliderVitesseMaxHero;
@@ -20,6 +20,7 @@ let zombieCountP;
 let dogsCountP;
 let lives = 3;
 let Score = 1000;
+let gameStarted = false;
 
 function preload() {
   bgImage = loadImage('assets/image/desert.png');
@@ -31,6 +32,7 @@ function preload() {
   backgroundImage = loadImage('assets/image/background.png');
   lifeImage = loadImage('assets/image/life.png');
   deathImage = loadImage('assets/image/death.png');
+  StartBgImage = loadImage('assets/image/StartBG.png');
 }
 
 function setup() {
@@ -71,104 +73,143 @@ function setup() {
 }
 
 function draw() {
-  background(backgroundImage);
-  image(bgImage, 0, 0, width, height);
-  // affiche les obstacles
-  obstacles.forEach((obstacle) => obstacle.show());
-
-  // Mise à jour et affichage du héros
-  hero.applyBehaviors(mouseX, mouseY, obstacles, dogs);
-  hero.update();
-  hero.show();
-
-  // Mise à jour et affichage des chiens
-  let leader = hero.pos;
-  if (snakeMode) {
-    dogs.forEach((dog, index) => {
-      leader = index === 0 ? hero.pos : dogs[index - 1].pos;
-      dog.applyBehaviors(leader, obstacles, dogs);
-      dog.update();
-      dog.show();
-    });
-  } else {
-    dogs.forEach((dog) => {
-      dog.applyBehaviors(hero.pos, obstacles, dogs);
-      dog.update();
-      dog.show();
-    });
+  if (!gameStarted) {
+    showStartMenu();
   }
+  else {
+    background(backgroundImage);
+    image(bgImage, 0, 0, width, height);
+    // affiche les obstacles
+    obstacles.forEach((obstacle) => obstacle.show());
 
-  // Vérifiez les collisions entre les chiens et les zombies
-  for (let i = dogs.length - 1; i >= 0; i--) {
-    if (dogs[i].checkCollision(zombies)) {
-      new Audio('assets/audio/bark.m4a').play();
-      dogs.splice(i, 1); // Supprimez le chien touché
-      Score -= 100;
-      // Ajouter zombie 
-      zombies.push(new Zombie(random(width), random(height)));
+    // Mise à jour et affichage du héros
+    hero.applyBehaviors(mouseX, mouseY, obstacles, dogs);
+    hero.update();
+    hero.show();
+
+    // Mise à jour et affichage des chiens
+    let leader = hero.pos;
+    if (snakeMode) {
+      dogs.forEach((dog, index) => {
+        leader = index === 0 ? hero.pos : dogs[index - 1].pos;
+        dog.applyBehaviors(leader, obstacles, dogs);
+        dog.update();
+        dog.show();
+      });
+    } else {
+      dogs.forEach((dog) => {
+        dog.applyBehaviors(hero.pos, obstacles, dogs);
+        dog.update();
+        dog.show();
+      });
     }
-  }
 
-  // Vérifiez les collisions entre les zombies et le hero
-if (hero.checkCollision(zombies)) {
-  new Audio('assets/audio/dead.m4a').play();
-  Score -= 200;
-  // supprimez tout les zombies
-  zombies = [];
-  // recréer des zombies
-  for (let i = 0; i < 10; i++) {
-    zombies.push(new Zombie(random(width), random(height)));
-  }
-  // perdre vie
-  lives--;
-  if (lives === 0) {
-    noLoop();
-    textSize(32);
-    textAlign(CENTER, CENTER);
-    text("Game Over", width / 2, height / 2);
+    // Vérifiez les collisions entre les chiens et les zombies
+    for (let i = dogs.length - 1; i >= 0; i--) {
+      if (dogs[i].checkCollision(zombies)) {
+        new Audio('assets/audio/bark.m4a').play();
+        dogs.splice(i, 1); // Supprimez le chien touché
+        Score -= 100;
+        // Ajouter zombie 
+        zombies.push(new Zombie(random(width), random(height)));
+      }
+    }
+
+    // Vérifiez les collisions entre les zombies et le hero
+    if (hero.checkCollision(zombies)) {
+      new Audio('assets/audio/dead.m4a').play();
+      bloodyEffect();
+      Score -= 200;
+      // supprimez tout les zombies
+      zombies = [];
+      // recréer des zombies
+      for (let i = 0; i < 10; i++) {
+        zombies.push(new Zombie(random(width), random(height)));
+      }
+      // perdre vie
+      lives--;
+      if (lives === 0) {
+        GameOver();
+      }
+    }
+
+    // Mise à jour et affichage des missiles
+    bullets.forEach((bullet, bIndex) => {
+      if (zombies.length > 0) {
+        bullet.applyBehaviors(zombies[0].pos); // Cible le premier zombie
+      }
+      bullet.update();
+      bullet.show();
+
+      // Vérifiez la collision entre la balle et les zombies
+      zombies.forEach((zombie, zIndex) => {
+        if (p5.Vector.dist(bullet.pos, zombie.pos) < bullet.r + zombie.size / 2) {
+          // Supprimez le zombie et la balle
+          zombies.splice(zIndex, 1);
+          bullets.splice(bIndex, 1);
+          Score += 100;
+        }
+      });
+    });
+
+    // Mise à jour et affichage des zombies
+    zombies.forEach((zombie) => {
+      zombie.applyBehaviors(obstacles);
+      zombie.update();
+      zombie.show();
+    });
+
+    // Mise à jour du nombre de zombies
+    zombieCountP.html(`Nombre de zombies : ${zombies.length}`);
+
+    // Mise à jour du nombre de chiens
+    dogsCountP.html(`Nombre de chiens : ${dogs.length}`);
+
+    // Affiche les vies
+    for (let i = 0; i < lives; i++) {
+      image(lifeImage, width - (i + 1) * 40, 20, 30, 30);
+    }
+
+    // Mise à jour du score
+    scoreP.html(`Score : ${Score}`);
   }
 }
 
+function showStartMenu() {
+  background(StartBgImage);
+  textSize(64);
+  textAlign(CENTER, CENTER);
+  fill(255, 0, 0); // Couleur rouge pour le titre
+  text("Zombie Game", width / 2, height / 2 - 100);
+  
+  textSize(32);
+  fill(255); // Couleur blanche pour le reste du texte
+  text("Click To start a new game", width / 2, height / 2);
+}
 
-  // Mise à jour et affichage des missiles
-  bullets.forEach((bullet, bIndex) => {
-    if (zombies.length > 0) {
-      bullet.applyBehaviors(zombies[0].pos); // Cible le premier zombie
-    }
-    bullet.update();
-    bullet.show();
+function GameOver() {
+  noLoop();
+  background(0, 0, 0, 200); // Ajouter un fond semi-transparent
+  textSize(64);
+  textAlign(CENTER, CENTER);
+  fill(255, 0, 0); // Couleur rouge pour "Game Over"
+  text("Game Over", width / 2, height / 2 - 50);
+  
+  textSize(32);
+  fill(255); // Couleur blanche pour le reste du texte
+  text("You are such a Loser", width / 2, height / 2);
+  
+  textSize(16);
+  text(`Your score is : ${Score}`, width / 2, height / 2 + 50);
+  gameStarted = false;
+}
 
-    // Vérifiez la collision entre la balle et les zombies
-    zombies.forEach((zombie, zIndex) => {
-      if (p5.Vector.dist(bullet.pos, zombie.pos) < bullet.r + zombie.size / 2) {
-        // Supprimez le zombie et la balle
-        zombies.splice(zIndex, 1);
-        bullets.splice(bIndex, 1);
-        Score += 100;
-      }
-    });
-  });
-
-  // Mise à jour et affichage des zombies
-  zombies.forEach((zombie) => {
-    zombie.applyBehaviors(obstacles);
-    zombie.update();
-    zombie.show();
-  });
-
-  // Mise à jour du nombre de zombies
-  zombieCountP.html(`Nombre de zombies : ${zombies.length}`);
-
-  // Mise à jour du nombre de chiens
-  dogsCountP.html(`Nombre de chiens : ${dogs.length}`);
-
-  // Affiche les vies
-  for (let i = 0; i < lives; i++) {
-    image(lifeImage, width - (i + 1) * 40, 20, 30, 30);
-  }
-
-  // Mise à jour du score
-  scoreP.html(`Score : ${Score}`);
+function bloodyEffect() {
+  push();
+  noStroke();
+  fill(255, 0, 0, 150); // Couleur rouge avec transparence
+  rect(0, 0, width, height);
+  pop();
 }
 
 function keyPressed() {
@@ -191,7 +232,7 @@ function keyPressed() {
   }
   // tir de missiles limité au nombre de zombies sur la map
   if (key === 'b') {
-    if (zombies.length > 0 && bullets.length < zombies.length){
+    if (zombies.length > 0 && bullets.length < zombies.length) {
       // effet de tir assets/rocket.mp3
       bullets.push(new Bullet(hero.pos.x, hero.pos.y));
       new Audio('assets/audio/rocket.m4a').play();
@@ -202,7 +243,12 @@ function keyPressed() {
     Obstacle.debug = !Obstacle.debug;
     Bullet.debug = !Bullet.debug;
   }
+}
 
+function mousePressed() {
+  if (!gameStarted) {
+    gameStarted = true;
+  }
 }
 
 function createMonSlider(label, min, max, val, step, x, y, color, prop, targetArray) {
