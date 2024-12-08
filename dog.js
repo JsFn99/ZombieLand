@@ -20,6 +20,7 @@ class Dog extends Character {
     }
   
     applyBehaviors(leader, obstacles, dogs) {
+      // On calcule les forces
       let arriveForce = this.arrive(leader, this.r);
       let avoidForce = this.avoid(obstacles);
       let separateForce = this.separate(dogs);
@@ -29,11 +30,13 @@ class Dog extends Character {
       h.push(hero);
       let avoidHeroForce = this.avoid(h);
   
+      // On multiplie les forces par leur poids respectif
       arriveForce.mult(this.arriveWeight);
       avoidForce.mult(this.avoidWeight);
       separateForce.mult(this.separateWeight);
       avoidHeroForce.mult(this.avoidHeroWeight);
   
+      // On additionne les forces
       this.applyForce(arriveForce);
       this.applyForce(avoidForce);
       this.applyForce(separateForce);
@@ -43,6 +46,7 @@ class Dog extends Character {
     }
   
     checkCollision(zombies) {
+      // On vérifie si le chien entre en collision avec les zombies
       for (let i = 0; i < zombies.length; i++) {
         let d = p5.Vector.dist(this.pos, zombies[i].pos);
         if (d < this.size / 2 + zombies[i].size / 2) {

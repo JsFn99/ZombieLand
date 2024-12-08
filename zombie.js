@@ -11,9 +11,11 @@ class Zombie extends Character {
   }
 
   applyBehaviors(obstacles) {
+    // on applique le comportement wander a partir de p5.Vector.random2D()
     let wander = p5.Vector.random2D();
     wander.setMag(this.maxForce);
 
+    // on applique le comportement avoid a partir de la fonction avoid
     let avoidForce = this.avoid(obstacles);
 
     this.applyForce(wander);

@@ -157,13 +157,15 @@
       } else if (this.pos.x > width - d) {
         desired = createVector(-this.maxSpeed, this.vel.y);
       }
-  
+
+      // si le véhicule est trop en haut ou trop en bas
       if (this.pos.y < d) {
         desired = createVector(this.vel.x, this.maxSpeed);
       } else if (this.pos.y > height - d) {
         desired = createVector(this.vel.x, -this.maxSpeed);
       }
-  
+
+      /// si le véhicule est trop à gauche ou trop à droite
       if (desired !== null) {
         desired.normalize();
         desired.mult(this.maxSpeed);
@@ -179,7 +181,7 @@
       let obstacleLePlusProche = undefined;
   
       obstacles.forEach(o => {
-        // Je calcule la distance entre le vaisseau et l'obstacle
+        // Je calcule la distance entre le character et l'obstacle
         const distance = this.pos.dist(o.pos);
   
         if (distance < plusPetiteDistance) {
@@ -297,7 +299,6 @@
     }
   
     // Comportement Separation : on garde ses distances par rapport aux voisins
-    // ON ETUDIERA CE COMPORTEMENT PLUS TARD !
     separate(boids) {
       let desiredseparation = this.distanceSeparation;
       let steer = createVector(0, 0, 0);
@@ -333,7 +334,7 @@
     }
   
     // applyForce est une méthode qui permet d'appliquer une force au véhicule
-    // en fait on additionne le vecteurr force au vecteur accélération
+    // en fait on additionne le vecteur force au vecteur accélération
     applyForce(force) {
       this.acc.add(force);
     }
