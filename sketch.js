@@ -1,5 +1,5 @@
 let hero;
-let men = [];
+let dogs = [];
 let zombies = [];
 let obstacles = [];
 let bullets = [];
@@ -14,17 +14,17 @@ let backgroundImage;
 let lifeImage;
 let deathImage;
 let sliderVitesseMaxZombies;
-let sliderVitesseMaxMen;
+let sliderVitesseMaxDogd;
 let sliderVitesseMaxHero;
 let zombieCountP;
-let menCountP;
+let dogsCountP;
 let lives = 3;
 let Score = 1000;
 
 function preload() {
   bgImage = loadImage('assets/desert.png');
   zombieImage = loadImage('assets/zombie.png');
-  manImage = loadImage('assets/man.png');
+  dogImage = loadImage('assets/dog.png');
   heroImage = loadImage('assets/hero.png');
   rockImage = loadImage('assets/rock.png');
   bulletImage = loadImage('assets/bullet.png');
@@ -38,20 +38,20 @@ function setup() {
 
   hero = new Hero(mouseX, mouseY);
 
-  // Création des zombies et des hommes
+  // Création des zombies et des chiens
   for (let i = 0; i < 10; i++) {
     zombies.push(new Zombie(random(width), random(height)));
   }
 
   for (let i = 0; i < 5; i++) {
-    men.push(new Man(random(width), random(height)));
+    dogs.push(new Dog(random(width), random(height)));
   }
 
   obstacles.push(new Obstacle(width / 2, height / 2, 100, "green"));
 
   // Création des sliders
   createMonSlider("Vitesse Zombies", 1, 10, 3, 0.1, 20, 0, "white", "maxSpeed", zombies);
-  createMonSlider("Vitesse Men", 1, 10, 5, 0.1, 20, 40, "white", "maxSpeed", men);
+  createMonSlider("Vitesse Dogs", 1, 10, 5, 0.1, 20, 40, "white", "maxSpeed", dogs);
   createMonSlider("Vitesse Hero", 1, 10, 5, 0.1, 20, 80, "white", "maxSpeed", [hero]);
 
   // affiche le nombre de zombies
@@ -59,10 +59,10 @@ function setup() {
   zombieCountP.style('color', 'white');
   zombieCountP.position(20, 120);
 
-  // affiche le nombre d'hommes
-  menCountP = createP(`Nombre d\'hommes: ${men.length}`);
-  menCountP.style('color', 'white');
-  menCountP.position(20, 150);
+  // affiche le nombre de chiens
+  dogsCountP = createP(`Nombre de chiens: ${dogs.length}`);
+  dogsCountP.style('color', 'white');
+  dogsCountP.position(20, 150);
 
   /// affiche le score
   scoreP = createP(`Score: ${Score}`);
@@ -77,31 +77,31 @@ function draw() {
   obstacles.forEach((obstacle) => obstacle.show());
 
   // Mise à jour et affichage du héros
-  hero.applyBehaviors(mouseX, mouseY, obstacles, men);
+  hero.applyBehaviors(mouseX, mouseY, obstacles, dogs);
   hero.update();
   hero.show();
 
-  // Mise à jour et affichage des hommes
+  // Mise à jour et affichage des chiens
   let leader = hero.pos;
   if (snakeMode) {
-    men.forEach((man, index) => {
-      leader = index === 0 ? hero.pos : men[index - 1].pos;
-      man.applyBehaviors(leader, obstacles, men);
-      man.update();
-      man.show();
+    dogs.forEach((dog, index) => {
+      leader = index === 0 ? hero.pos : dogs[index - 1].pos;
+      dog.applyBehaviors(leader, obstacles, dogs);
+      dog.update();
+      dog.show();
     });
   } else {
-    men.forEach((man) => {
-      man.applyBehaviors(hero.pos, obstacles, men);
-      man.update();
-      man.show();
+    dogs.forEach((dog) => {
+      dog.applyBehaviors(hero.pos, obstacles, dogs);
+      dog.update();
+      dog.show();
     });
   }
 
-  // Vérifiez les collisions entre les hommes et les zombies
-  for (let i = men.length - 1; i >= 0; i--) {
-    if (men[i].checkCollision(zombies)) {
-      men.splice(i, 1); // Supprimez l'homme touché
+  // Vérifiez les collisions entre les chiens et les zombies
+  for (let i = dogs.length - 1; i >= 0; i--) {
+    if (dogs[i].checkCollision(zombies)) {
+      dogs.splice(i, 1); // Supprimez le chien touché
       Score -= 100;
       // Ajouter zombie 
       zombies.push(new Zombie(random(width), random(height)));
@@ -158,8 +158,8 @@ if (hero.checkCollision(zombies)) {
   // Mise à jour du nombre de zombies
   zombieCountP.html(`Nombre de zombies : ${zombies.length}`);
 
-  // Mise à jour du nombre d'hommes
-  menCountP.html(`Nombre d\'hommes : ${men.length}`);
+  // Mise à jour du nombre de chiens
+  dogsCountP.html(`Nombre de chiens : ${dogs.length}`);
 
   // Affiche les vies
   for (let i = 0; i < lives; i++) {
@@ -172,11 +172,11 @@ if (hero.checkCollision(zombies)) {
 
 function keyPressed() {
   console.log(key);
-  // Ajout d'un homme
+  // Ajout d'un chien
   if (key === 'm') {
-    men.push(new Man(random(width), random(height)));
+    dogs.push(new Dog(random(width), random(height)));
   }
-  // Men en mode serpent activé/désactivé
+  // Dogs en mode serpent activé/désactivé
   if (key === 's') {
     snakeMode = !snakeMode;
   }
