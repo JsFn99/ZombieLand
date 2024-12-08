@@ -1,12 +1,12 @@
-# Zombie Game
+# Zombie Land
 
 ## Description
-Zombie Game est un jeu où le joueur contrôle un héros qui doit survivre dans un environnement rempli de zombies. Le héros est accompagné de chiens qui le suivent et qu'il doit proteger. Le joueur peut également tirer des missiles pour éliminer les zombies. Le jeu comporte un menu de démarrage, un écran de victoire et un écran de défaite.
+Zombie Land est un jeu où le joueur contrôle un héros qui doit survivre dans un environnement rempli de zombies. Le héros est accompagné de chiens qui le suivent et qu'il doit proteger. Le joueur peut également tirer des missiles pour éliminer les zombies. Le jeu comporte un menu de démarrage, un écran de victoire et un écran de défaite.
 
 ## Fonctionnalités
 - Contrôle du héros avec la souris
 - Chiens qui suivent le héros et évitent les obstacles
-- Zombies qui errent et évitent les obstacles
+- Zombies qui errent et évitent les obstacles tout en évitant les bords
 - Missiles qui ciblent et détruisent les zombies
 - Menu de démarrage
 - Écran de victoire
@@ -25,10 +25,11 @@ Zombie Game est un jeu où le joueur contrôle un héros qui doit survivre dans 
    ```
 3. Ouvrez le fichier `index.html` dans votre navigateur pour lancer le jeu.
 
-   ou bien ouvrez le lien suivant : [Game](https://jsfn99.github.io/ZombieLand/)
+## Lien du jeu
+Ou bien ouvrez le lien suivant : [Game](https://jsfn99.github.io/ZombieLand/)
 
 ## Utilisation
-- Utilisez la souris pour déplacer le héros.
+- Utilisez la souris pour déplacer le héro.
 - Cliquez sur l'écran de démarrage pour commencer une nouvelle partie.
 - Utilisez les touches suivantes pour interagir avec le jeu :
   - `m` : Ajouter un chien
