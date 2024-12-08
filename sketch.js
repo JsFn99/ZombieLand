@@ -51,37 +51,38 @@ function setup() {
 
   obstacles.push(new Obstacle(width / 2, height / 2, 100, "green"));
 
- // Création des sliders 
-createMonSlider("Vitesse Zombies", 1, 10, 3, 0.1, 20, 20, "white", "maxSpeed", zombies);
-createMonSlider("Vitesse Dogs", 1, 10, 5, 0.1, 20, 60, "white", "maxSpeed", dogs);
-createMonSlider("Force Dogs", 0, 1, 0.2, 0.01, 20, 100, "white", "maxForce", dogs);
-createMonSlider("Vitesse Hero", 1, 10, 5, 0.1, 20, 140, "white", "maxSpeed", [hero]);
-createMonSlider("Force Hero", 0, 1, 0.2, 0.01, 20, 180, "white", "maxForce", [hero]);
-createMonSlider("Vitesse Missiles", 1, 10, 5, 0.1, 20, 220, "white", "maxSpeed", bullets);
+  // Création des sliders 
+  createMonSlider("Vitesse Zombies", 1, 10, 3, 0.1, 20, 20, "white", "maxSpeed", zombies);
+  createMonSlider("Vitesse Dogs", 1, 10, 5, 0.1, 20, 60, "white", "maxSpeed", dogs);
+  createMonSlider("Force Dogs", 0, 1, 0.2, 0.01, 20, 100, "white", "maxForce", dogs);
+  createMonSlider("Vitesse Hero", 1, 10, 5, 0.1, 20, 140, "white", "maxSpeed", [hero]);
+  createMonSlider("Force Hero", 0, 1, 0.2, 0.01, 20, 180, "white", "maxForce", [hero]);
+  createMonSlider("Vitesse Missiles", 1, 10, 5, 0.1, 20, 220, "white", "maxSpeed", bullets);
+  if (gameStarted) {
+    // Affiche le nombre de zombies 
+    zombieCountP = createP(`Nombre de zombies: ${zombies.length}`);
+    zombieCountP.style('color', 'white');
+    zombieCountP.style('font-size', '16px');
+    zombieCountP.style('background', 'rgba(0, 0, 0, 0.5)');
+    zombieCountP.style('padding', '10px');
+    zombieCountP.position(20, 260);
 
-// Affiche le nombre de zombies 
-zombieCountP = createP(`Nombre de zombies: ${zombies.length}`);
-zombieCountP.style('color', 'white');
-zombieCountP.style('font-size', '16px');
-zombieCountP.style('background', 'rgba(0, 0, 0, 0.5)');
-zombieCountP.style('padding', '10px');
-zombieCountP.position(20, 260);
+    // Affiche le nombre de chiens 
+    dogsCountP = createP(`Nombre de chiens: ${dogs.length}`);
+    dogsCountP.style('color', 'white');
+    dogsCountP.style('font-size', '16px');
+    dogsCountP.style('background', 'rgba(0, 0, 0, 0.5)');
+    dogsCountP.style('padding', '10px');
+    dogsCountP.position(20, 300);
 
-// Affiche le nombre de chiens 
-dogsCountP = createP(`Nombre de chiens: ${dogs.length}`);
-dogsCountP.style('color', 'white');
-dogsCountP.style('font-size', '16px');
-dogsCountP.style('background', 'rgba(0, 0, 0, 0.5)');
-dogsCountP.style('padding', '10px');
-dogsCountP.position(20, 300);
-
-// Affiche le score 
-scoreP = createP(`Score: ${Score}`);
-scoreP.style('color', 'white');
-scoreP.style('font-size', '16px');
-scoreP.style('background', 'rgba(0, 0, 0, 0.5)');
-scoreP.style('padding', '10px');
-scoreP.position(20, 340);
+    // Affiche le score 
+    scoreP = createP(`Score: ${Score}`);
+    scoreP.style('color', 'white');
+    scoreP.style('font-size', '16px');
+    scoreP.style('background', 'rgba(0, 0, 0, 0.5)');
+    scoreP.style('padding', '10px');
+    scoreP.position(20, 340);
+  }
 }
 
 function draw() {
@@ -150,7 +151,7 @@ function draw() {
     bullets.forEach((bullet, bIndex) => {
       if (zombies.length > 0) {
         // on cible le premier zombie
-        bullet.applyBehaviors(zombies[0].pos); 
+        bullet.applyBehaviors(zombies[0].pos);
       }
       bullet.update();
       bullet.show();
@@ -162,7 +163,7 @@ function draw() {
           zombies.splice(zIndex, 1);
           bullets.splice(bIndex, 1);
           Score += 100;
-          if(zombies.length === 0) {
+          if (zombies.length === 0) {
             win();
           }
         }
@@ -199,25 +200,25 @@ function showStartMenu() {
   // Couleur rouge pour le titre
   fill(255, 0, 0);
   text("Zombie Game", width / 2, height / 2 - 100);
-  
+
   textSize(64);
   // Couleur blanche pour le reste du texte
-  fill(255); 
+  fill(255);
   text("Click To start a new game", width / 2, height / 2);
 }
 
 function GameOver() {
   noLoop();
-  background(0, 0, 0, 200); 
+  background(0, 0, 0, 200);
   textSize(64);
   textAlign(CENTER, CENTER);
   fill(255, 0, 0);
   text("Game Over", width / 2, height / 2 - 50);
-  
+
   textSize(32);
-  fill(255); 
+  fill(255);
   text("You are such a Loser", width / 2, height / 2);
-  
+
   textSize(16);
   text(`Your score is : ${Score}`, width / 2, height / 2 + 50);
   gameStarted = false;
@@ -225,16 +226,16 @@ function GameOver() {
 
 function win() {
   noLoop();
-  background(0, 0, 0, 200); 
+  background(0, 0, 0, 200);
   textSize(64);
   textAlign(CENTER, CENTER);
-  fill(0, 255, 0); 
+  fill(0, 255, 0);
   text("You Win!", width / 2, height / 2 - 50);
-  
+
   textSize(32);
-  fill(255); 
+  fill(255);
   text("Congratulations, BOSS!", width / 2, height / 2);
-  
+
   textSize(16);
   text(`Your score is : ${Score}`, width / 2, height / 2 + 50);
   gameStarted = false;
@@ -243,7 +244,7 @@ function win() {
 function bloodyEffect() {
   push();
   noStroke();
-  fill(255, 0, 0, 150); 
+  fill(255, 0, 0, 150);
   rect(0, 0, width, height);
   pop();
 }
