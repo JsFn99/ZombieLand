@@ -58,32 +58,31 @@ function setup() {
   createMonSlider("Vitesse Hero", 1, 10, 5, 0.1, 20, 140, "white", "maxSpeed", [hero]);
   createMonSlider("Force Hero", 0, 1, 0.2, 0.01, 20, 180, "white", "maxForce", [hero]);
   createMonSlider("Vitesse Missiles", 1, 10, 5, 0.1, 20, 220, "white", "maxSpeed", bullets);
-  if (gameStarted) {
-    // Affiche le nombre de zombies 
-    zombieCountP = createP(`Nombre de zombies: ${zombies.length}`);
-    zombieCountP.style('color', 'white');
-    zombieCountP.style('font-size', '16px');
-    zombieCountP.style('background', 'rgba(0, 0, 0, 0.5)');
-    zombieCountP.style('padding', '10px');
-    zombieCountP.position(20, 260);
+  // Affiche le nombre de zombies 
+  zombieCountP = createP(`Nombre de zombies: ${zombies.length}`);
+  zombieCountP.style('color', 'white');
+  zombieCountP.style('font-size', '16px');
+  zombieCountP.style('background', 'rgba(0, 0, 0, 0.5)');
+  zombieCountP.style('padding', '10px');
+  zombieCountP.position(20, 260);
 
-    // Affiche le nombre de chiens 
-    dogsCountP = createP(`Nombre de chiens: ${dogs.length}`);
-    dogsCountP.style('color', 'white');
-    dogsCountP.style('font-size', '16px');
-    dogsCountP.style('background', 'rgba(0, 0, 0, 0.5)');
-    dogsCountP.style('padding', '10px');
-    dogsCountP.position(20, 300);
+  // Affiche le nombre de chiens 
+  dogsCountP = createP(`Nombre de chiens: ${dogs.length}`);
+  dogsCountP.style('color', 'white');
+  dogsCountP.style('font-size', '16px');
+  dogsCountP.style('background', 'rgba(0, 0, 0, 0.5)');
+  dogsCountP.style('padding', '10px');
+  dogsCountP.position(20, 300);
 
-    // Affiche le score 
-    scoreP = createP(`Score: ${Score}`);
-    scoreP.style('color', 'white');
-    scoreP.style('font-size', '16px');
-    scoreP.style('background', 'rgba(0, 0, 0, 0.5)');
-    scoreP.style('padding', '10px');
-    scoreP.position(20, 340);
-  }
+  // Affiche le score 
+  scoreP = createP(`Score: ${Score}`);
+  scoreP.style('color', 'white');
+  scoreP.style('font-size', '16px');
+  scoreP.style('background', 'rgba(0, 0, 0, 0.5)');
+  scoreP.style('padding', '10px');
+  scoreP.position(20, 340);
 }
+
 
 function draw() {
   if (!gameStarted) {
