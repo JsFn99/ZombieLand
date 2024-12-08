@@ -1,7 +1,7 @@
 # Zombie Land
 
 ## Description
-Zombie Land est un jeu où le joueur contrôle un héros qui doit survivre dans un environnement rempli de zombies. Le héros est accompagné de chiens qui le suivent et qu'il doit proteger. Le joueur peut également tirer des missiles pour éliminer les zombies. Le jeu comporte un menu de démarrage, un écran de victoire et un écran de défaite.
+Zombie Land est un jeu où le joueur contrôle un héros qui doit survivre dans un environnement rempli de zombies. Le héros est accompagné de chiens qui le suivent et qu'il doit protéger. Le joueur peut également tirer des missiles pour éliminer les zombies. Le jeu comporte un menu de démarrage, un écran de victoire et un écran de défaite.
 
 ![Zombie Land](assets/image/StartBG.png)
 
