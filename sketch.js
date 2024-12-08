@@ -189,7 +189,7 @@ function showStartMenu() {
 
 function GameOver() {
   noLoop();
-  background(0, 0, 0, 200); // Ajouter un fond semi-transparent
+  background(0, 0, 0, 200); 
   textSize(64);
   textAlign(CENTER, CENTER);
   fill(255, 0, 0); // Couleur rouge pour "Game Over"
