@@ -162,6 +162,9 @@ function draw() {
           zombies.splice(zIndex, 1);
           bullets.splice(bIndex, 1);
           Score += 100;
+          if(zombies.length === 0) {
+            win();
+          }
         }
       });
     });
@@ -191,13 +194,13 @@ function draw() {
 
 function showStartMenu() {
   background(StartBgImage);
-  textSize(64);
+  textSize(128);
   textAlign(CENTER, CENTER);
   // Couleur rouge pour le titre
   fill(255, 0, 0);
   text("Zombie Game", width / 2, height / 2 - 100);
   
-  textSize(32);
+  textSize(64);
   // Couleur blanche pour le reste du texte
   fill(255); 
   text("Click To start a new game", width / 2, height / 2);
@@ -214,6 +217,23 @@ function GameOver() {
   textSize(32);
   fill(255); 
   text("You are such a Loser", width / 2, height / 2);
+  
+  textSize(16);
+  text(`Your score is : ${Score}`, width / 2, height / 2 + 50);
+  gameStarted = false;
+}
+
+function win() {
+  noLoop();
+  background(0, 0, 0, 200); 
+  textSize(64);
+  textAlign(CENTER, CENTER);
+  fill(0, 255, 0); 
+  text("You Win!", width / 2, height / 2 - 50);
+  
+  textSize(32);
+  fill(255); 
+  text("Congratulations, BOSS!", width / 2, height / 2);
   
   textSize(16);
   text(`Your score is : ${Score}`, width / 2, height / 2 + 50);
