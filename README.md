@@ -17,7 +17,7 @@ Zombie Game est un jeu où le joueur contrôle un héros qui doit survivre dans 
 ## Installation
 1. Clonez le dépôt :
    ```bash
-   git clone https://github.com/votre-utilisateur/zombie-game.git
+   git clone https://github.com/JsFn99/ZombieLand
    ```
 2. Ouvrez le dossier du projet :
    ```bash
