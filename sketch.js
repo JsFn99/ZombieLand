@@ -22,15 +22,15 @@ let lives = 3;
 let Score = 1000;
 
 function preload() {
-  bgImage = loadImage('assets/desert.png');
-  zombieImage = loadImage('assets/zombie.png');
-  dogImage = loadImage('assets/dog.png');
-  heroImage = loadImage('assets/hero.png');
-  rockImage = loadImage('assets/rock.png');
-  bulletImage = loadImage('assets/bullet.png');
-  backgroundImage = loadImage('assets/background.png');
-  lifeImage = loadImage('assets/life.png');
-  deathImage = loadImage('assets/death.png');
+  bgImage = loadImage('assets/image/desert.png');
+  zombieImage = loadImage('assets/image/zombie.png');
+  dogImage = loadImage('assets/image/dog.png');
+  heroImage = loadImage('assets/image/hero.png');
+  rockImage = loadImage('assets/image/rock.png');
+  bulletImage = loadImage('assets/image/bullet.png');
+  backgroundImage = loadImage('assets/image/background.png');
+  lifeImage = loadImage('assets/image/life.png');
+  deathImage = loadImage('assets/image/death.png');
 }
 
 function setup() {
@@ -101,6 +101,7 @@ function draw() {
   // Vérifiez les collisions entre les chiens et les zombies
   for (let i = dogs.length - 1; i >= 0; i--) {
     if (dogs[i].checkCollision(zombies)) {
+      new Audio('assets/audio/bark.m4a').play();
       dogs.splice(i, 1); // Supprimez le chien touché
       Score -= 100;
       // Ajouter zombie 
@@ -109,8 +110,8 @@ function draw() {
   }
 
   // Vérifiez les collisions entre les zombies et le hero
-  // Vérifiez les collisions entre les zombies et le hero
 if (hero.checkCollision(zombies)) {
+  new Audio('assets/audio/dead.m4a').play();
   Score -= 200;
   // supprimez tout les zombies
   zombies = [];
@@ -190,8 +191,11 @@ function keyPressed() {
   }
   // tir de missiles limité au nombre de zombies sur la map
   if (key === 'b') {
-    if (zombies.length > 0 && bullets.length < zombies.length)
+    if (zombies.length > 0 && bullets.length < zombies.length){
+      // effet de tir assets/rocket.mp3
       bullets.push(new Bullet(hero.pos.x, hero.pos.y));
+      new Audio('assets/audio/rocket.m4a').play();
+    }
   }
   if (key === 'd') {
     Character.debug = !Character.debug;
